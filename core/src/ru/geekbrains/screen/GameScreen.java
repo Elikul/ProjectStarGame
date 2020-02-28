@@ -16,6 +16,7 @@ import ru.geekbrains.pool.BulletPool;
 import com.badlogic.gdx.audio.Music;
 import static ru.geekbrains.sprite.UserShip.getSound;
 
+
 public class GameScreen extends BaseScreen {
 
     private static final int STAR_COUNT = 128;
@@ -29,9 +30,7 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
 
     private Music music;
-    private boolean isPlaying;
-    private boolean isLooping;
-    private float position;
+
 
     @Override
     public void show() {
@@ -47,12 +46,10 @@ public class GameScreen extends BaseScreen {
         userShip = new UserShip(atlas,bulletPool);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
-        isPlaying = music.isPlaying();
-        isLooping = music.isLooping();
-        position = music.getPosition();
-        music.setVolume(3f);
-        music.play();
         music.setLooping(true);
+        music.play();
+
+
     }
 
     @Override
@@ -113,12 +110,6 @@ public class GameScreen extends BaseScreen {
         }
         userShip.update(delta);
         bulletPool.updateActiveSprites(delta);
-        if (!isPlaying) {
-            music.play();
-        }
-        if (!isLooping) {
-            music.setLooping(true);
-        }
     }
 
     private void freeAllDestroyed() {
