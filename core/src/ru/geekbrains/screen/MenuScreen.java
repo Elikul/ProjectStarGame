@@ -14,6 +14,8 @@ import ru.geekbrains.sprite.ButtonExit;
 import ru.geekbrains.sprite.ButtonPlay;
 import ru.geekbrains.sprite.Star;
 
+import com.badlogic.gdx.audio.Music;
+
 public class MenuScreen extends BaseScreen {
 
     private static final int STAR_COUNT = 256;
@@ -34,18 +36,29 @@ public class MenuScreen extends BaseScreen {
         this.game = game;
     }
 
+    private Music music;
+
+    private boolean isPlaying;
+    private boolean isLooping;
+
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas);
         }
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
+        music.setVolume(3f);
+        music.play();
+        isPlaying = music.isPlaying();
+        isLooping = music.isLooping();
+
     }
 
     @Override
@@ -58,6 +71,12 @@ public class MenuScreen extends BaseScreen {
     public void update (float delta) {
         for (Star star : stars) {
             star.update(delta);
+        }
+        if (!isPlaying) {
+            music.play();
+        }
+        if (!isLooping) {
+            music.setLooping(true);
         }
     }
 
@@ -80,6 +99,7 @@ public class MenuScreen extends BaseScreen {
     public void dispose() {
         bg.dispose();
         atlas.dispose();
+        music.dispose();
         super.dispose();
     }
 

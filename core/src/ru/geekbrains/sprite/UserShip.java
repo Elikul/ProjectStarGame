@@ -1,6 +1,6 @@
 package ru.geekbrains.sprite;
 
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,6 +9,8 @@ import com.badlogic.gdx.math.Vector2;
 import ru.geekbrains.base.Sprite;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
+
+import com.badlogic.gdx.audio.Sound;
 
 public class UserShip extends Sprite {
 
@@ -28,6 +30,10 @@ public class UserShip extends Sprite {
     private boolean pressedRight;
     private int leftPointer = INVALID_POINTER;
     private int rightPointer = INVALID_POINTER;
+    private int bulletSpeed;
+    private int bulletCount;
+
+    private static Sound sound;
 
     public UserShip(TextureAtlas atlas, BulletPool bulletPool) {
         super(atlas.findRegion("main_ship"), 1, 2, 2);
@@ -35,6 +41,9 @@ public class UserShip extends Sprite {
         this.bulletRegion = atlas.findRegion("bulletMainShip");
         this.bulletV = new Vector2(0, 0.5f);
         this.bulletPos = new Vector2();
+        this.sound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        bulletSpeed = 7;
+        bulletCount = 0;
     }
 
     @Override
@@ -47,6 +56,13 @@ public class UserShip extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+        bulletCount++;
+        if (bulletCount == bulletSpeed) {
+            System.out.println("shoot= " + bulletCount);
+            shoot();
+            sound.play(0.03f);
+            bulletCount = 0;
+        }
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
             stop();
@@ -149,5 +165,9 @@ public class UserShip extends Sprite {
         Bullet bullet = bulletPool.obtain();
         bulletPos.set(pos.x, getTop());
         bullet.set(this, bulletRegion, bulletPos, bulletV, 0.01f, worldBounds, 1);
+    }
+
+    public static Sound getSound() {
+        return sound;
     }
 }
