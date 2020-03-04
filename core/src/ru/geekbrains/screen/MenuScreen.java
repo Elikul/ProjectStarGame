@@ -38,8 +38,6 @@ public class MenuScreen extends BaseScreen {
 
     private Music music;
 
-    private boolean isPlaying;
-    private boolean isLooping;
 
     @Override
     public void show() {
@@ -47,17 +45,15 @@ public class MenuScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas);
         }
         buttonExit = new ButtonExit(atlas);
         buttonPlay = new ButtonPlay(atlas, game);
-        music.setVolume(3f);
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
+        music.setLooping(true);
         music.play();
-        isPlaying = music.isPlaying();
-        isLooping = music.isLooping();
 
     }
 
@@ -72,12 +68,16 @@ public class MenuScreen extends BaseScreen {
         for (Star star : stars) {
             star.update(delta);
         }
-        if (!isPlaying) {
-            music.play();
-        }
-        if (!isLooping) {
-            music.setLooping(true);
-        }
+    }
+
+    @Override
+    public void pause() {
+        music.pause();
+    }
+
+    @Override
+    public void resume() {
+        music.play();
     }
 
     public void draw () {
