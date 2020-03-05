@@ -45,6 +45,7 @@ public class EnemiesEmitter {
     private final Vector2 enemyMediumV = new Vector2(0f, -0.03f);
     private final Vector2 enemyBigV = new Vector2(0f, -0.005f);
 
+
     private TextureRegion bulletRegion;
 
     private final EnemyPool enemyPool;
@@ -101,8 +102,9 @@ public class EnemiesEmitter {
                         ENEMY_BIG_HP
                 );
             }
-            enemy.setBottom(worldBounds.getTop());
             enemy.pos.x = Rnd.nextFloat(worldBounds.getLeft() + enemy.getHalfWidth(), worldBounds.getRight() - enemy.getHalfWidth());
+            enemy.setBottom(worldBounds.getTop());
+
         }
     }
 }

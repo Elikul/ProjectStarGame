@@ -8,12 +8,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.List;
+
 import ru.geekbrains.base.BaseScreen;
 import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
+import ru.geekbrains.sprite.Enemy;
 import ru.geekbrains.sprite.UserShip;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemiesEmitter;
@@ -39,7 +42,6 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
 
     private EnemiesEmitter enemiesEmitter;
-
 
     @Override
     public void show() {
@@ -67,6 +69,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         update(delta);
+        checkCollisions();
         freeAllDestroyed();
         draw();
     }
@@ -144,11 +147,19 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions() {
-        //TODO место для ДЗ
+        List<Enemy> enemyList = enemyPool.getActiveObjects();
+        for (Enemy enemy : enemyList) {
+            if (enemy.isDestroyed()) {
+                continue;
+            }
+            float minDist = enemy.getHalfWidth() + userShip.getHalfWidth();
+            if (enemy.pos.dst(userShip.pos) < minDist) {
+                enemy.destroy();
+            }
+        }
     }
 
     private void freeAllDestroyed() {
-
         bulletPool.freeAllDestroyedActiveObjects();
         enemyPool.freeAllDestroyedActiveObjects();
         explosionPool.freeAllDestroyedActiveObjects();

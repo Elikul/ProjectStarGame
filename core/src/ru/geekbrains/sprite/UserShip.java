@@ -48,7 +48,6 @@ public class UserShip extends Ship {
 
     @Override
     public void update(float delta) {
-        bulletPos.set(pos.x, getTop());
         super.update(delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
