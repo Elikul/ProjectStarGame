@@ -10,7 +10,6 @@ import ru.geekbrains.math.Rect;
 import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.ExplosionPool;
 
-import com.badlogic.gdx.audio.Sound;
 
 public class UserShip extends Ship {
 
@@ -35,7 +34,7 @@ public class UserShip extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.reloadInterval = 0.2f;
-        this.hp = 100;
+        this.hp = 10;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     }
 
@@ -48,6 +47,7 @@ public class UserShip extends Ship {
 
     @Override
     public void update(float delta) {
+        bulletPos.set(pos.x, getTop());
         super.update(delta);
         if (getRight() > worldBounds.getRight()) {
             setRight(worldBounds.getRight());
@@ -133,6 +133,13 @@ public class UserShip extends Ship {
                 }
                 break;
         }
+    }
+
+    public boolean isBulletCollision(Rect bullet) {
+        return !(bullet.getRight() < getLeft()
+                || bullet.getLeft() > getRight()
+                || bullet.getBottom() > pos.y
+                || bullet.getTop() < getBottom());
     }
 
     private void moveRight() {

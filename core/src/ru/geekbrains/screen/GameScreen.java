@@ -16,8 +16,10 @@ import ru.geekbrains.pool.BulletPool;
 import ru.geekbrains.pool.EnemyPool;
 import ru.geekbrains.pool.ExplosionPool;
 import ru.geekbrains.sprite.Background;
+import ru.geekbrains.sprite.Bullet;
 import ru.geekbrains.sprite.Enemy;
 import ru.geekbrains.sprite.UserShip;
+import ru.geekbrains.sprite.MessageGameOver;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemiesEmitter;
 
@@ -25,6 +27,8 @@ import ru.geekbrains.utils.EnemiesEmitter;
 public class GameScreen extends BaseScreen {
 
     private static final int STAR_COUNT = 128;
+
+    private enum State {PLAYING, PAUSE, GAME_OVER}
 
     private TextureAtlas atlas;
 
@@ -42,6 +46,11 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
 
     private EnemiesEmitter enemiesEmitter;
+
+    private State state;
+    private State pervState;
+
+    private MessageGameOver messageGameOver;
 
     @Override
     public void show() {
@@ -63,6 +72,8 @@ public class GameScreen extends BaseScreen {
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
+        messageGameOver = new MessageGameOver(atlas);
+        state = State.PLAYING;
 
     }
 
@@ -82,17 +93,21 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         userShip.resize(worldBounds);
+        messageGameOver.resize(worldBounds);
     }
 
 
     @Override
     public void pause() {
         music.pause();
+        pervState = state;
+        state = State.PAUSE;
     }
 
     @Override
     public void resume() {
         music.play();
+        state = pervState;
     }
 
 
@@ -112,26 +127,33 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean keyDown(int keycode) {
-        userShip.keyDown(keycode);
+        if (state == State.PLAYING) {
+            userShip.keyDown(keycode);
+        }
         return false;
     }
 
     @Override
-    public boolean keyUp(int keycode)
-    {
-        userShip.keyUp(keycode);
+    public boolean keyUp(int keycode) {
+        if (state == State.PLAYING) {
+            userShip.keyUp(keycode);
+        }
         return false;
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        userShip.touchDown(touch,pointer,button);
+        if (state == State.PLAYING) {
+            userShip.touchDown(touch, pointer, button);
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        userShip.touchUp(touch,pointer,button);
+        if (state == State.PLAYING) {
+            userShip.touchUp(touch, pointer, button);
+        }
         return false;
     }
 
@@ -139,23 +161,45 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars){
             star.update(delta);
         }
-        userShip.update(delta);
-        bulletPool.updateActiveSprites(delta);
         explosionPool.updateActiveSprites(delta);
-        enemyPool.updateActiveSprites(delta);
-        enemiesEmitter.generate(delta);
+        if (state == State.PLAYING) {
+            userShip.update(delta);
+            bulletPool.updateActiveSprites(delta);
+            enemyPool.updateActiveSprites(delta);
+            enemiesEmitter.generate(delta);
+        }
     }
 
     private void checkCollisions() {
+        if (state != State.PLAYING) {
+            return;
+        }
         List<Enemy> enemyList = enemyPool.getActiveObjects();
         for (Enemy enemy : enemyList) {
-            if (enemy.isDestroyed()) {
+            float minDist = userShip.getHalfWidth() + enemy.getHalfWidth();
+            if (userShip.pos.dst(enemy.pos) <= minDist) {
+                enemy.destroy();
+                userShip.damage(enemy.getDamage());
+            }
+        }
+        List<Bullet> bulletList = bulletPool.getActiveObjects();
+        for (Bullet bullet : bulletList) {
+            if (bullet.getOwner() != userShip) {
+                if (userShip.isBulletCollision(bullet)) {
+                    userShip.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
                 continue;
             }
-            float minDist = enemy.getHalfWidth() + userShip.getHalfWidth();
-            if (enemy.pos.dst(userShip.pos) < minDist) {
-                enemy.destroy();
+            for (Enemy enemy : enemyList) {
+                if (enemy.isBulletCollision(bullet)) {
+                    enemy.damage(bullet.getDamage());
+                    bullet.destroy();
+                }
             }
+        }
+        if (userShip.isDestroyed()) {
+            state = State.GAME_OVER;
         }
     }
 
@@ -173,10 +217,14 @@ public class GameScreen extends BaseScreen {
         for(Star star : stars){
             star.draw(batch);
         }
-        userShip.draw(batch);
-        bulletPool.drawActiveSprites(batch);
-        enemyPool.drawActiveSprites(batch);
         explosionPool.drawActiveSprites(batch);
+        if (state == State.PLAYING) {
+            userShip.draw(batch);
+            bulletPool.drawActiveSprites(batch);
+            enemyPool.drawActiveSprites(batch);
+        } else if (state == State.GAME_OVER) {
+            messageGameOver.draw(batch);
+        }
         batch.end();
     }
 }
