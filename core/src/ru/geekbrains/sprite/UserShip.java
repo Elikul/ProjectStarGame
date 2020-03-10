@@ -154,4 +154,10 @@ public class UserShip extends Ship {
         v.setZero();
     }
 
+    public void startNewGame() {
+        this.hp = 10;
+        this.pos.x = worldBounds.pos.x;
+        flushDestroy();
+    }
+
 }

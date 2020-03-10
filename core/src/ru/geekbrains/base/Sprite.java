@@ -91,4 +91,3 @@ public abstract class Sprite extends Rect {
         return destroyed;
     }
 }
-

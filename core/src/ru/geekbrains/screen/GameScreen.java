@@ -23,6 +23,8 @@ import ru.geekbrains.sprite.MessageGameOver;
 import ru.geekbrains.sprite.Star;
 import ru.geekbrains.utils.EnemiesEmitter;
 
+import ru.geekbrains.sprite.ButtonNewGame;
+
 
 public class GameScreen extends BaseScreen {
 
@@ -51,6 +53,7 @@ public class GameScreen extends BaseScreen {
     private State pervState;
 
     private MessageGameOver messageGameOver;
+    private ButtonNewGame buttonNewGame;
 
     @Override
     public void show() {
@@ -73,6 +76,7 @@ public class GameScreen extends BaseScreen {
         music.setLooping(true);
         music.play();
         messageGameOver = new MessageGameOver(atlas);
+        buttonNewGame = new ButtonNewGame(atlas, this);
         state = State.PLAYING;
 
     }
@@ -94,6 +98,7 @@ public class GameScreen extends BaseScreen {
         }
         userShip.resize(worldBounds);
         messageGameOver.resize(worldBounds);
+        buttonNewGame.resize(worldBounds);
     }
 
 
@@ -145,6 +150,8 @@ public class GameScreen extends BaseScreen {
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         if (state == State.PLAYING) {
             userShip.touchDown(touch, pointer, button);
+        }else if (state == State.GAME_OVER) {
+            buttonNewGame.touchDown(touch, pointer, button);
         }
         return false;
     }
@@ -153,9 +160,12 @@ public class GameScreen extends BaseScreen {
     public boolean touchUp(Vector2 touch, int pointer, int button) {
         if (state == State.PLAYING) {
             userShip.touchUp(touch, pointer, button);
+        }else if (state == State.GAME_OVER) {
+            buttonNewGame.touchUp(touch, pointer, button);
         }
         return false;
     }
+
 
     private void update(float delta) {
         for (Star star : stars){
@@ -224,7 +234,19 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
         } else if (state == State.GAME_OVER) {
             messageGameOver.draw(batch);
+            buttonNewGame.draw(batch);
         }
         batch.end();
+    }
+
+    public void startNewGame() {
+        state = State.PLAYING;
+
+        userShip.startNewGame();
+
+        bulletPool.freeAllActiveObjects();
+        explosionPool.freeAllActiveObjects();
+        enemyPool.freeAllActiveObjects();
+
     }
 }
