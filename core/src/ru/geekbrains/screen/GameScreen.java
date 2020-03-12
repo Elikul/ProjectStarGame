@@ -148,6 +148,7 @@ public class GameScreen extends BaseScreen {
         bulletSound.dispose();
         explosionSound.dispose();
         userShip.dispose();
+        font.dispose();
         super.dispose();
     }
 
