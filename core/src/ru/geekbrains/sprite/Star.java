@@ -9,13 +9,13 @@ import ru.geekbrains.math.Rnd;
 
 public class Star extends Sprite {
 
-    private static final float STAR_HEIGHT = 0.007f;
+    protected static final float STAR_HEIGHT = 0.007f;
 
-    private final Vector2 v;
+    protected final Vector2 v;
     private Rect worldBounds;
 
-    private float animateTimer;
-    private float animateInterval = 1f;
+    protected float animateTimer;
+    protected float animateInterval = 1f;
 
     public Star(TextureAtlas atlas) {
         super(atlas.findRegion("star"));
@@ -27,6 +27,17 @@ public class Star extends Sprite {
     @Override
     public void update(float delta) {
         pos.mulAdd(v, delta);
+        checkAndHandleBounds();
+        animateTimer += delta;
+        if (animateTimer >= animateInterval) {
+            animateTimer = 0;
+            setHeightProportion(STAR_HEIGHT);
+        } else {
+            setHeightProportion(getHeight() + 0.0001f);
+        }
+    }
+
+    public void checkAndHandleBounds() {
         if (getRight() < worldBounds.getLeft()) {
             setLeft(worldBounds.getRight());
         }
@@ -39,14 +50,8 @@ public class Star extends Sprite {
         if (getBottom() > worldBounds.getTop()) {
             setTop(worldBounds.getBottom());
         }
-        animateTimer += delta;
-        if (animateTimer >= animateInterval) {
-            animateTimer = 0;
-            setHeightProportion(STAR_HEIGHT);
-        } else {
-            setHeightProportion(getHeight() + 0.0001f);
-        }
     }
+
 
     @Override
     public void resize(Rect worldBounds) {

@@ -14,6 +14,7 @@ import ru.geekbrains.pool.ExplosionPool;
 public class UserShip extends Ship {
 
     private static final int INVALID_POINTER = -1;
+    private static final int HP = 100;
 
     private boolean pressedLeft;
     private boolean pressedRight;
@@ -34,7 +35,7 @@ public class UserShip extends Ship {
         this.bulletHeight = 0.01f;
         this.damage = 1;
         this.reloadInterval = 0.2f;
-        this.hp = 10;
+        this.hp = HP;
         this.shootSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
     }
 
@@ -155,7 +156,12 @@ public class UserShip extends Ship {
     }
 
     public void startNewGame() {
-        this.hp = 10;
+        this.hp = HP;
+        stop();
+        pressedLeft = false;
+        pressedRight = false;
+        leftPointer = INVALID_POINTER;
+        rightPointer = INVALID_POINTER;
         this.pos.x = worldBounds.pos.x;
         flushDestroy();
     }
