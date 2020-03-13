@@ -40,6 +40,7 @@ public class GameScreen extends BaseScreen {
     private enum State {PLAYING, PAUSE, GAME_OVER}
 
     private TextureAtlas atlas;
+    private TextureAtlas atlas_names;
 
     private Texture bg;
     private Background background;
@@ -73,9 +74,10 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-        bg = new Texture("textures/bg.png");
+        bg = new Texture("space.jpg");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/mainAtlas.tpack"));
+        atlas_names = new TextureAtlas(Gdx.files.internal("names/names.tpack"));
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         explosionSound = Gdx.audio.newSound(Gdx.files.internal("sounds/explosion.wav"));
         bulletPool = new BulletPool();
@@ -90,8 +92,8 @@ public class GameScreen extends BaseScreen {
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
-        messageGameOver = new MessageGameOver(atlas);
-        buttonNewGame = new ButtonNewGame(atlas, this);
+        messageGameOver = new MessageGameOver(atlas_names);
+        buttonNewGame = new ButtonNewGame(atlas_names, this);
         font = new Font("font/font.fnt", "font/font.png");
         font.setSize(FONT_SIZE);
         frags = 0;

@@ -1,0 +1,33 @@
+
+names.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+game_over
+  rotate: false
+  xy: 1, 344
+  size: 816, 141
+  orig: 816, 141
+  offset: 0, 0
+  index: -1
+animate_game_name
+  rotate: false
+  xy: 1, 225
+  size: 754, 117
+  orig: 754, 117
+  offset: 0, 0
+  index: -1
+game_name
+  rotate: false
+  xy: 1, 117
+  size: 720, 106
+  orig: 720, 106
+  offset: 0, 0
+  index: -1
+new_game
+  rotate: false
+  xy: 1, 1
+  size: 583, 114
+  orig: 583, 114
+  offset: 0, 0
+  index: -1

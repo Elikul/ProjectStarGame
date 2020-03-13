@@ -12,9 +12,11 @@ import ru.geekbrains.math.Rect;
 import ru.geekbrains.sprite.Background;
 import ru.geekbrains.sprite.ButtonExit;
 import ru.geekbrains.sprite.ButtonPlay;
+import ru.geekbrains.sprite.GameName;
 import ru.geekbrains.sprite.Star;
 
 import com.badlogic.gdx.audio.Music;
+
 
 public class MenuScreen extends BaseScreen {
 
@@ -23,9 +25,11 @@ public class MenuScreen extends BaseScreen {
     private final Game game;
 
     private TextureAtlas atlas;
+    private TextureAtlas atlasNames;
 
     private Texture bg;
     private Background background;
+
 
     private Star[] stars;
 
@@ -38,13 +42,16 @@ public class MenuScreen extends BaseScreen {
 
     private Music music;
 
+    private GameName gameName;
 
     @Override
     public void show() {
         super.show();
-        bg = new Texture("textures/bg.png");
+        bg = new Texture("space.jpg");
         background = new Background(bg);
         atlas = new TextureAtlas(Gdx.files.internal("textures/menuAtlas.tpack"));
+        atlasNames =  new TextureAtlas(Gdx.files.internal("names/names.tpack"));
+        gameName = new GameName(atlasNames);
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas);
@@ -54,7 +61,6 @@ public class MenuScreen extends BaseScreen {
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
-
     }
 
     @Override
@@ -85,6 +91,7 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
+        gameName.draw(batch);
         for (Star star : stars) {
             star.draw(batch);
         }
@@ -107,6 +114,7 @@ public class MenuScreen extends BaseScreen {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         background.resize(worldBounds);
+        gameName.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
         }

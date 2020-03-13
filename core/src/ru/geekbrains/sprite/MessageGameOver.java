@@ -8,13 +8,13 @@ import ru.geekbrains.math.Rect;
 public class MessageGameOver extends Sprite {
 
     public MessageGameOver(TextureAtlas atlas) {
-        super(atlas.findRegion("message_game_over"));
+        super(atlas.findRegion("game_over"));
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(0.07f);
+        setHeightProportion(0.1f);
         setTop(0.1f);
     }
 }

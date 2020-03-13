@@ -11,14 +11,14 @@ public class ButtonNewGame extends ScalledButton{
     private GameScreen gameScreen;
 
     public ButtonNewGame(TextureAtlas atlas, GameScreen gameScreen) {
-        super(atlas.findRegion("button_new_game"));
+        super(atlas.findRegion("new_game"));
         this.gameScreen = gameScreen;
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(0.07f);
+        setHeightProportion(0.09f);
         setBottom(-0.1f);
     }
 
