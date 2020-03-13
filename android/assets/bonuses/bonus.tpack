@@ -1,0 +1,40 @@
+
+bonus.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bomb
+  rotate: false
+  xy: 1, 1
+  size: 188, 229
+  orig: 188, 229
+  offset: 0, 0
+  index: -1
+half_health
+  rotate: false
+  xy: 191, 67
+  size: 179, 163
+  orig: 179, 163
+  offset: 0, 0
+  index: -1
+blue_pill
+  rotate: false
+  xy: 372, 66
+  size: 170, 164
+  orig: 170, 164
+  offset: 0, 0
+  index: -1
+green_pill
+  rotate: false
+  xy: 544, 66
+  size: 170, 164
+  orig: 170, 164
+  offset: 0, 0
+  index: -1
+plus_damage
+  rotate: false
+  xy: 716, 75
+  size: 144, 155
+  orig: 144, 155
+  offset: 0, 0
+  index: -1

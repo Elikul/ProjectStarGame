@@ -166,4 +166,14 @@ public class UserShip extends Ship {
         flushDestroy();
     }
 
+    public void addHP(int hp)
+    {
+        if(getHp() + hp >= HP)
+        {
+            this.hp = HP;
+            return;
+        }
+        this.hp = getHp()+ hp;
+    }
+
 }
